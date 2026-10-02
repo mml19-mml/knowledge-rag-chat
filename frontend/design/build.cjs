@@ -1,0 +1,1 @@
+const {execFileSync}=require('node:child_process');for(const name of ['welcome','conversation','auth','documents'])execFileSync(process.execPath,['node_modules/tailwindcss/lib/cli.js','-c',`design/${name}.cjs`,'-i','design/input.css','-o',`src/design/${name}.css`,'--minify'],{stdio:'inherit'});

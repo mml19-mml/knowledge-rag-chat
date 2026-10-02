@@ -1,0 +1,71 @@
+from __future__ import annotations
+
+from uuid import UUID
+
+from fastapi import APIRouter, File, Query, UploadFile
+
+from app.core.deps import AdminOwner, DbSession
+from app.schemas.document import (
+    DeleteResponse,
+    DocumentChunkSearchResponse,
+    DocumentRead,
+    DocumentStatusResponse,
+    DocumentUploadResponse,
+)
+from app.services.document_service import DocumentService
+
+router = APIRouter(prefix="/documents", tags=["documents"])
+
+
+@router.get("", response_model=list[DocumentRead])
+async def list_documents(current_user: AdminOwner, db: DbSession) -> list[DocumentRead]:
+    return await DocumentService(db).list_documents(current_user)
+
+
+@router.post("/upload", response_model=DocumentUploadResponse, status_code=201)
+async def upload_document(
+    current_user: AdminOwner,
+    db: DbSession,
+    file: UploadFile = File(...),
+) -> DocumentUploadResponse:
+    return await DocumentService(db).upload_document(current_user, file)
+
+
+@router.get("/chunks/search", response_model=DocumentChunkSearchResponse)
+async def search_document_chunks(
+    current_user: AdminOwner,
+    db: DbSession,
+    q: str = Query(..., min_length=1),
+    limit: int = Query(10, ge=1, le=20),
+    document_id: UUID | None = None,
+) -> DocumentChunkSearchResponse:
+    return await DocumentService(db).search_chunks(
+        user=current_user,
+        query_text=q,
+        limit=limit,
+        document_id=document_id,
+    )
+
+
+@router.get("/{task_id}/status", response_model=DocumentStatusResponse)
+async def document_status(
+    task_id: UUID,
+    current_user: AdminOwner,
+    db: DbSession,
+) -> DocumentStatusResponse:
+    return await DocumentService(db).get_status(current_user, task_id)
+
+
+@router.delete("/{document_id}", response_model=DeleteResponse)
+async def delete_document(
+    document_id: UUID,
+    current_user: AdminOwner,
+    db: DbSession,
+) -> DeleteResponse:
+    success = await DocumentService(db).delete_document(current_user, document_id)
+    return DeleteResponse(success=success)
+
+
+@router.post("/{document_id}/reindex", response_model=DocumentStatusResponse)
+async def reindex_document(document_id: UUID, current_user: AdminOwner, db: DbSession) -> DocumentStatusResponse:
+    return await DocumentService(db).reindex_document(current_user, document_id)

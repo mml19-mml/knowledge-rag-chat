@@ -1,0 +1,51 @@
+name: knowledge-rag-chat
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: edumate
+    ports: ["127.0.0.1:15432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d edumate"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    restart: unless-stopped
+    ports: ["127.0.0.1:16333:6333"]
+    volumes: ["qdrant_data:/qdrant/storage"]
+  migrate:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/edumate
+    command: ["alembic", "-c", "alembic.ini", "upgrade", "head"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/edumate
+      QDRANT_URL: http://qdrant:6333
+      APP_ENV: production
+    ports: ["127.0.0.1:18000:8000"]
+    volumes: ["./backend/uploads:/app/uploads", "embedding_models:/app/model-cache"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      qdrant: {condition: service_started}
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports: ["15173:80"]
+    depends_on: [backend]
+volumes:
+  postgres_data:
+  qdrant_data:
+  embedding_models:

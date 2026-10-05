@@ -30,4 +30,4 @@ config.content=["./src/components/WelcomeDesign.vue"];
 config.important=".design-welcome";
 config.plugins=[require("@tailwindcss/forms"),require("@tailwindcss/container-queries")];
 config.corePlugins={preflight:true};
-module.exports=config;
+module.exports=require("./theme-tokens.cjs")(config);

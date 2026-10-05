@@ -9,3 +9,5 @@ import './design/welcome.css';
 import './design/conversation.css';
 import './design/auth.css';
 import './design/documents.css';
+
+import './theme.css';

@@ -39,4 +39,4 @@ config.content=["./src/components/AuthDesign.vue"];
 config.important=".design-auth";
 config.plugins=[require("@tailwindcss/forms"),require("@tailwindcss/container-queries")];
 config.corePlugins={preflight:false};
-module.exports=config;
+module.exports=require("./theme-tokens.cjs")(config);

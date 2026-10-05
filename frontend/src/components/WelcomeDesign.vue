@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import ThemeSwitch from "./ThemeSwitch.vue";
 const question=defineModel<string>({required:true});
 defineProps<{busy:boolean;error:string}>();const emit=defineEmits<{send:[]}>();
 function keyboard(e:KeyboardEvent){if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();emit('send')}}
 function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.height='auto';el.style.height=Math.min(el.scrollHeight,240)+'px'}
 </script>
-<template><div class="design-welcome"><div class="design-body min-h-screen bg-[#fbfbfd] bg-atlas text-ink flex flex-col justify-between selection:bg-blue-100 selection:text-primary-container antialiased">
+<template><div class="design-welcome"><div class="design-body min-h-screen bg-canvas bg-atlas text-ink flex flex-col justify-between selection:bg-blue-100 selection:text-primary-container antialiased">
 
 <header class="w-full max-w-6xl mx-auto px-6 py-6 sm:px-10 flex justify-between items-center z-10" data-purpose="top-navigation">
 
 <div class="flex items-center gap-2.5">
-<div class="w-7 h-7 rounded-lg bg-ink flex items-center justify-center text-white shadow-sm">
+<div class="w-7 h-7 rounded-lg ui-logo flex items-center justify-center shadow-sm">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
 </svg>
@@ -17,13 +18,14 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
 <span class="text-[17px] sm:text-lg font-semibold tracking-tight text-ink font-display">
         Knowledge Chat
       </span>
-<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium tracking-wide bg-black/[0.04] text-body-muted border border-black/[0.04]">
+<span class="ui-curated-badge inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium tracking-wide bg-surface-secondary text-body-muted border border-hairline/60">
         CURATED BASE
       </span>
 </div>
 
-<div>
-<button class="press-action px-3.5 py-1.5 rounded-full text-xs font-medium text-body-muted hover:text-ink bg-white/80 hover:bg-white border border-black/[0.06] shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center gap-1.5" data-purpose="clear-conversation-trigger" id="clear-chat-btn" @click="question=''" type="button">
+<div class="header-actions">
+<ThemeSwitch />
+<button class="press-action px-3.5 py-1.5 rounded-full text-xs font-medium text-body-muted hover:text-ink bg-surface/80 hover:bg-surface border border-hairline shadow-[0_1px_2px_rgba(0,0,0,0.03)] flex items-center gap-1.5" data-purpose="clear-conversation-trigger" id="clear-chat-btn" aria-label="Clear input" title="Clear input" @click="question=''" type="button">
 <svg class="w-3.5 h-3.5 text-ink-muted-48" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
 <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>
@@ -54,7 +56,7 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
 
 <p class="text-xs text-ink-muted-48 mt-1 mb-8 font-normal">
         Please provide a specific query. Sources will be cited when available.
-      </p><div class="relative flex justify-center items-end -mb-8 z-0 pointer-events-none select-none"><img alt="Knowledge AI Assistant" class="w-56 sm:w-64 md:w-72 h-auto max-h-72 object-contain drop-shadow-[0_12px_24px_rgba(0,102,204,0.08)] filter" src="/robot-welcome.png"/></div>
+      </p><div class="ui-hero-robot relative flex justify-center items-end -mb-8 z-0 pointer-events-none select-none"><img alt="Knowledge AI Assistant" class="w-56 sm:w-64 md:w-72 h-auto max-h-72 object-contain drop-shadow-[0_12px_24px_rgba(0,102,204,0.08)] filter" src="/robot-welcome.png"/></div>
 
 <div class="w-full apple-card p-6 text-left relative z-10" data-purpose="query-composer-card">
 
@@ -68,7 +70,7 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
 <p class="text-[12px] text-body-muted tracking-tight select-none">
             Answers are grounded strictly in your uploaded knowledge.
           </p>
-<button class="press-action self-end sm:self-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-[13px] font-medium text-white bg-[#0066cc] hover:bg-[#0071e3] shadow-[0_1px_2px_rgba(0,102,204,0.2)] hover:shadow-md transition-all" data-purpose="submit-query" id="send-button" @click="$emit('send')" :disabled="busy" type="button">
+<button class="ui-primary-action press-action self-end sm:self-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-[13px] font-medium text-on-action bg-action hover:bg-action-hover shadow-[0_1px_2px_rgba(0,102,204,0.2)] hover:shadow-md transition-all" data-purpose="submit-query" id="send-button" @click="$emit('send')" :disabled="busy || !question.trim()" type="button">
 <span>{{busy?'Searching…':'Ask Knowledge'}}</span>
 <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 <path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -98,15 +100,15 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
 
     /* Ambient Atlas canvas backdrop */
     .bg-atlas {
-      background: radial-gradient(circle at 50% 12%, rgba(235, 243, 255, 0.85) 0%, rgba(248, 250, 253, 0.5) 55%, #fbfbfd 100%);
+      background: var(--ui-welcome-backdrop);
     }
 
     /* Apple-grade elevated floating prompt card */
     .apple-card {
-      background: #ffffff;
+      background: rgb(var(--ui-surface));
       border-radius: 24px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgb(var(--ui-hairline));
+      box-shadow: var(--ui-card-shadow);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -114,7 +116,7 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
     .apple-card:focus-within {
       transform: translateY(-2px);
       box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
-      border-color: rgba(0, 0, 0, 0.09);
+      border-color: rgb(var(--ui-link) / .4);
     }
 
     /* Spring micro-interaction */
@@ -131,12 +133,12 @@ function resize(e:Event){const el=e.target as HTMLTextAreaElement;el.style.heigh
       width: 4px;
     }
     textarea::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.12);
+      background: rgb(var(--ui-hairline));
       border-radius: 9999px;
     }
     textarea::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 0, 0, 0.24);
+      background: rgb(var(--ui-muted));
     }
   
-.design-body{min-height:100vh}button:disabled{cursor:not-allowed;opacity:.55}button:focus-visible,a:focus-visible{outline:2px solid #0071e3;outline-offset:3px}
+.design-body{min-height:100vh}button:disabled{cursor:not-allowed;opacity:.55}button:focus-visible,a:focus-visible{outline:2px solid rgb(var(--ui-link));outline-offset:3px}
 </style>

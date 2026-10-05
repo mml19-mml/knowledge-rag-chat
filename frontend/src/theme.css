@@ -1,0 +1,91 @@
+:root {
+  color-scheme: light;
+  --ui-canvas: 251 251 253;
+  --ui-surface: 255 255 255;
+  --ui-secondary: 245 245 247;
+  --ui-ink: 29 29 31;
+  --ui-body: 60 64 72;
+  --ui-muted: 103 105 112;
+  --ui-hairline: 225 226 230;
+  --ui-link: 0 102 204;
+  --ui-link-tint: 239 246 255;
+  --ui-link-border: 219 234 254;
+  --ui-action: 0 102 204;
+  --ui-action-hover: 0 113 227;
+  --ui-on-action: 255 255 255;
+  --ui-success: 4 120 87;
+  --ui-success-tint: 236 253 245;
+  --ui-success-border: 167 243 208;
+  --ui-danger: 185 28 28;
+  --ui-mascot: 15 23 42;
+  --ui-card-shadow: 0 4px 24px -2px #00000009, 0 1px 2px #00000005;
+  --ui-welcome-backdrop: radial-gradient(ellipse at 50% 12%, #ebf3ffd9, #f8fafd80 55%, #fbfbfd);
+  --ui-auth-backdrop: radial-gradient(ellipse at 20% 20%, #ebf4ffb3, transparent 55%), radial-gradient(ellipse at 85% 75%, #f0f3ff99, transparent 45%);
+  --ui-documents-backdrop: linear-gradient(180deg, #fbfbfd, #f4f6fa);
+  --ui-companion-backdrop: none;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --ui-canvas: 9 9 9;
+  --ui-surface: 19 19 19;
+  --ui-secondary: 28 28 28;
+  --ui-ink: 250 250 250;
+  --ui-body: 208 208 212;
+  --ui-muted: 160 160 168;
+  --ui-hairline: 43 43 47;
+  --ui-link: 77 174 255;
+  --ui-link-tint: 16 35 52;
+  --ui-link-border: 31 60 78;
+  --ui-action: 255 255 255;
+  --ui-action-hover: 226 226 230;
+  --ui-on-action: 9 9 9;
+  --ui-success: 107 225 167;
+  --ui-success-tint: 16 39 29;
+  --ui-success-border: 33 70 51;
+  --ui-danger: 255 151 151;
+  --ui-mascot: 14 14 18;
+  --ui-card-shadow: 0 8px 32px #00000026;
+  --ui-welcome-backdrop: radial-gradient(ellipse at 50% 44%, #6a4cf514, transparent 48%), linear-gradient(#090909, #090909);
+  --ui-auth-backdrop: radial-gradient(ellipse at 20% 20%, #6a4cf50c, transparent 55%), radial-gradient(ellipse at 85% 75%, #0099ff0a, transparent 45%);
+  --ui-documents-backdrop: linear-gradient(#090909, #090909);
+  --ui-companion-backdrop: radial-gradient(ellipse at 100% 0%, #6a4cf522, transparent 60%);
+}
+body { background: rgb(var(--ui-canvas)); color: rgb(var(--ui-ink)); }
+.design-body { color: rgb(var(--ui-ink)); background-color: rgb(var(--ui-canvas)); }
+::selection { background: rgb(var(--ui-link) / .2); color: rgb(var(--ui-ink)); }
+.header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.ui-logo { background: rgb(var(--ui-ink)); color: rgb(var(--ui-canvas)); }
+.ui-companion { background-image: var(--ui-companion-backdrop); }
+.design-welcome h1 { text-wrap: balance; }
+.ui-hero-robot { position: relative; }
+.ui-hero-robot::before {
+  content: ''; position: absolute; inset: 15% 0 0;
+  border-radius: 50%; background: radial-gradient(ellipse, #6a4cf51c, transparent 65%);
+  opacity: 0; pointer-events: none;
+}
+:root[data-theme='dark'] .ui-hero-robot::before { opacity: 1; }
+:root[data-theme='dark'] .design-welcome h1 { font-size: clamp(38px, 5vw, 62px); letter-spacing: -.045em; }
+:root[data-theme='dark'] .ui-primary-action { border-radius: 999px; box-shadow: none; }
+:root[data-theme='dark'] .ui-stat { border-radius: 24px; }
+/* A consistent focus ring is visible on both canvases, including keyboard use. */
+.design-body :is(button, a, input, textarea):focus-visible { outline: 2px solid rgb(var(--ui-link)); outline-offset: 3px; }
+.design-body textarea { caret-color: rgb(var(--ui-link)); }
+.design-body textarea::placeholder { color: rgb(var(--ui-muted)); opacity: 1; }
+.design-body :is(button, input, textarea):disabled { cursor: not-allowed; opacity: .55; }
+.design-body { scrollbar-color: rgb(var(--ui-hairline)) transparent; }
+@media (max-width: 640px) {
+  .header-actions { gap: 6px; }
+  .ui-curated-badge, .ui-chat-status { display: none !important; }
+  .design-welcome header[data-purpose='top-navigation'] { padding-inline: 16px; gap: 4px; }
+  .design-welcome #clear-chat-btn { padding: 9px; }
+  .design-welcome #clear-chat-btn > span { display: none; }
+  .design-auth header > div[class] { padding-inline: 16px; }
+  .design-auth header .header-actions a { padding-inline: 8px; }
+  .design-documents [data-purpose='toolbar'] { flex-wrap: wrap; gap: 12px; }
+  .design-documents [data-purpose='upload-container'] > div:first-child { flex-wrap: wrap; gap: 8px; }
+  .design-conversation [data-purpose='chat-heading'] { flex-wrap: wrap; gap: 8px; }
+  .design-conversation [data-purpose='chat-heading'] > div:last-child { display: none; }
+}
+@media (max-width: 360px) {
+  .design-auth header > div[class] { flex-wrap: wrap; height: auto; min-height: 56px; padding-block: 8px; gap: 4px; }
+}

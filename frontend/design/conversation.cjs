@@ -30,4 +30,4 @@ config.content=["./src/components/ConversationDesign.vue"];
 config.important=".design-conversation";
 config.plugins=[require("@tailwindcss/forms"),require("@tailwindcss/container-queries")];
 config.corePlugins={preflight:false};
-module.exports=config;
+module.exports=require("./theme-tokens.cjs")(config);
